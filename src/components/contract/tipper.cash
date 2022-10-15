@@ -1,0 +1,51 @@
+pragma cashscript ^0.6.5;
+
+contract BettingGameInner(// Pubkey Alice is using to identify herself
+                          pubkey alicePk,
+                          // Pubkey Bob is using to identify himself
+                          pubkey bobPk,
+                          // SHA-256 of `aliceSecret`
+                          bytes32 aliceHash,
+                          // SHA-256 of `bobSecret`
+                          bytes32 bobHash,
+                          // Timeout after which the redeemTimeout*
+                          // function can be used
+                          int timeoutPeriod) {
+    
+ 
+    function redeemMutual(// Secret number Alice is betting on.
+                    
+                          bytes32 aliceSecret,
+                          // Secret number Bob is betting on.
+                          bytes32 bobSecret,
+                          // Signature from either Alice or Bob,
+                          // depending on whomst of the two won.
+                          sig signature) {
+        // Verify both secrets match the commitment.
+        require(sha256(aliceSecret) == aliceHash);
+        require(sha256(bobSecret) == bobHash);
+        // XOR both secrets. Result cannot be guessed without
+        // knowing what the other party will pick.
+        bytes32 xorSecret = aliceSecret ^ bobSecret;
+        // Extract last byte of XOR'd secrets
+        bytes xorSecretByte = xorSecret.split(31)[0];
+        // Parity of last byte determines winner
+        int winnerNum = int(xorSecretByte) % 2;
+        if (winnerNum == 0) {
+            // Even => Alice won
+            require(checkSig(signature, alicePk));
+        } else {
+            // Odd => Bob won
+            require(checkSig(signature, bobPk));
+        }
+    }
+
+    // Bob failed to provide a secret for the second timeout.
+    // At this point, Bob knows Alice's secret, because she had to
+    // reveal it to invoke the timeout in BettingGameOuter.
+    // We let her freely spend it.
+    function redeemTimeout(sig sigAlice) {
+        require(tx.age >= timeoutPeriod);
+        require(checkSig(sigAlice, alicePk));
+    }
+}

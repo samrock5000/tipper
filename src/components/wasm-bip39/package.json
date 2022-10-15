@@ -1,0 +1,12 @@
+{
+  "name": "rust-wasm-bip39",
+  "version": "0.1.0",
+  "files": [
+    "rust_wasm_bip39_bg.wasm",
+    "rust_wasm_bip39.js",
+    "rust_wasm_bip39.d.ts"
+  ],
+  "module": "rust_wasm_bip39.js",
+  "types": "rust_wasm_bip39.d.ts",
+  "sideEffects": false
+}
