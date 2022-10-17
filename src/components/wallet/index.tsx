@@ -73,7 +73,8 @@ export const createWallet = async (): Promise<ContractArg> => {
 
   return res;
 };
-export const checkBalance = async (addr: string) => {
+export const checkBalance = async (addr: string,) => {
+
   if (addr === undefined){
     log("address is undefined", addr)
     return 0
@@ -96,7 +97,7 @@ export const checkBalance = async (addr: string) => {
   log("sats ",satoshis)
   txValue = satoshis
   res = txValue === undefined ? 0 : txValue
-
+ 
   return res
 
 
