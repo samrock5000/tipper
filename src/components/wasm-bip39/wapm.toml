@@ -1,9 +1,0 @@
-[package]
-name = "wasm-bip39"
-version = "1.0.0"
-description = "compiled from tiny-bip39 crate"
-license = "ISC"
-
-[[module]]
-name = "rust_wasm_bip39_bg"
-source = "/home/sambo/projects/rust-wasm-bip39/pkg/rust_wasm_bip39_bg.wasm"

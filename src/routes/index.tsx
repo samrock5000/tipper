@@ -1,11 +1,12 @@
 import { component$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
-import {CreateContract} from '../components/createcontract/'
+// import {CreateP2PKHContract} from '../components/createcontract/'
+import {CreateP2PKHContract} from '../components/createtip/'
 
 export default component$(() => {
   return (
     <div>
-    <CreateContract/>
+    <CreateP2PKHContract/>
     </div>
   );
 });
