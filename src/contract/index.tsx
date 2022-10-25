@@ -1,7 +1,7 @@
 // import { useWatch$, useStore } from '@builder.io/qwik';
 import {ChronikClient} from 'chronik-client'
 import {ChronikNetworkProvider,NetworkProvider,Argument,Contract} from '@samrock5000/cashscript'
-import {createWallet,chronik,chronikNet} from '../services'
+import {createWallet,chronik,chronikNet, addrToScriptHash} from '../services'
 import { Artifact, Network } from '@samrock5000/cashscript';
 import { compileString } from 'cashc';
 import type {ContractTypes} from '../interfaces'
@@ -96,7 +96,8 @@ export const getP2phkContract = async (): Promise<ContractTypes> => {
   
     const newContract = new Contract(artifact, args, chronikNet);
     // console.log("getContract ", newContract.address)
-    const res: ContractTypes = { contract: newContract, signer: signer, receiver:receipient };
+    const contractScriptHash = await addrToScriptHash(newContract.address)
+    const res: ContractTypes = { contract: newContract, signer: signer, receiver:receipient,contractScriptHash:contractScriptHash };
   
     return res;
   };

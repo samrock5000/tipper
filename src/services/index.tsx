@@ -64,7 +64,6 @@ export const sendRawTx = async (rawTx: string): Promise<string | unknown | undef
 
 export const createWallet = async (): Promise<ContractArg> => {
 
-
     const secp256k1 = await instantiateSecp256k1();
     const ripemd160 = await instantiateRipemd160();
     const sha256 = await instantiateSha256();

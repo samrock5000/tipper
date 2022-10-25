@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
-import { component$, useMount$, $, useStore, useWatch$, Resource, useResource$, useClientEffect$ } from '@builder.io/qwik';
-// import { chronikBroadcastTx } from '../../services'
+import { component$, useStore, Resource, useResource$, } from '@builder.io/qwik';
 import { sendRawTx } from '../../services'
 
 export const log = console.log

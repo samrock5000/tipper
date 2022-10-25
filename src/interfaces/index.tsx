@@ -5,6 +5,7 @@ export interface ContractTypes {
     contract: Contract;
     signer: ContractArg;
     receiver?: ContractArg;
+    contractScriptHash?:string
 }
 
 export interface ContractArg {
@@ -17,6 +18,7 @@ export interface ContractArg {
 
 export interface Keys {
     addr: string;
+    addrScriptHash:string;
     signerPrivateKey: string;
     signerPublicKeyHash: string;
     signerPublicKey: string;
@@ -27,5 +29,5 @@ export interface Keys {
 }
 
 export interface SpendProps {
-    apicalls: number, spent: boolean, satoshis: number, send$?: QRL<(rawTx: string) => Promise<unknown>>, rawHex: string, canSpend: boolean
+    apicalls: number, spent: boolean, satoshis: number, rawHex: string, canSpend: boolean
 }
