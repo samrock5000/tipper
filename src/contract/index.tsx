@@ -1,7 +1,7 @@
 // import { useWatch$, useStore } from '@builder.io/qwik';
 import {ChronikClient} from 'chronik-client'
 import {ChronikNetworkProvider,NetworkProvider,Argument,Contract} from '@samrock5000/cashscript'
-import {createWallet} from '../services'
+import {createWallet,chronik,chronikNet} from '../services'
 import { Artifact, Network } from '@samrock5000/cashscript';
 import { compileString } from 'cashc';
 import type {ContractTypes} from '../interfaces'
@@ -53,7 +53,7 @@ export const escrowArtifact = (() => {
 
 
 export const getEscowContract = async (): Promise<ContractTypes> => {
-    const chronik = new ChronikClient("https://chronik.be.cash/xec")
+    // const chronik = new ChronikClient("https://chronik.be.cash/xec")
     const artifact = escrowArtifact();
 
     const signer = await createWallet();
@@ -67,7 +67,7 @@ export const getEscowContract = async (): Promise<ContractTypes> => {
     );
     // const provider: NetworkProvider = new ChronikNetworkProvider("mainnet",chronik)
 
-    const newContract = new Contract(artifact, args, provider);
+    const newContract = new Contract(artifact, args, chronikNet);
     // console.log("getContract ", newContract.address)
     const res: ContractTypes = {
         contract: newContract,
@@ -79,7 +79,12 @@ export const getEscowContract = async (): Promise<ContractTypes> => {
 };
 
 export const getP2phkContract = async (): Promise<ContractTypes> => {
-    const chronik = new ChronikClient("https://chronik.be.cash/xec");
+    // const chronik = new ChronikClient("https://chronik.be.cash/xec");
+    // const provider: NetworkProvider = new ChronikNetworkProvider(
+        // "mainnet",
+        // chronik
+    //   );
+    
   
     const artifact = p2pkhArtifact();
     const signer = await createWallet();
@@ -88,12 +93,8 @@ export const getP2phkContract = async (): Promise<ContractTypes> => {
     const args: Argument[] = [signer.pubkeyhashHex];
     
 
-    const provider: NetworkProvider = new ChronikNetworkProvider(
-      "mainnet",
-      chronik
-    );
   
-    const newContract = new Contract(artifact, args, provider);
+    const newContract = new Contract(artifact, args, chronikNet);
     // console.log("getContract ", newContract.address)
     const res: ContractTypes = { contract: newContract, signer: signer, receiver:receipient };
   
@@ -112,7 +113,7 @@ export const getP2phkContract = async (): Promise<ContractTypes> => {
  
     const args: Argument[] = [pkh];
     
-    const newContract = new Contract(artifact, args, provider);
+    const newContract = new Contract(artifact, args, chronikNet);
     // console.log("getContract ", newContract.address)
     const res: Contract =  newContract;
   

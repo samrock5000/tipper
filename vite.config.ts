@@ -7,7 +7,7 @@ export default defineConfig(() => {
   return {
     plugins: [qwikCity(), qwikVite(), tsconfigPaths()],
     optimizeDeps:{
-      include:['qrcode','chronik-client','@samrock5000/cashscript']
+      include:['qrcode','chronik-client','@samrock5000/cashscript',]//'@bitauth/libauth'
     }
   };
 });

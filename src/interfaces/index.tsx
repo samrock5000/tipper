@@ -25,3 +25,7 @@ export interface Keys {
     receiverPublicKeyHash: string;
     receiverWif:string;
 }
+
+export interface SpendProps {
+    apicalls: number, spent: boolean, satoshis: number, send$?: QRL<(rawTx: string) => Promise<unknown>>, rawHex: string, canSpend: boolean
+}

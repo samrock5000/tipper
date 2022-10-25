@@ -156,9 +156,5 @@ export const createTransactionHex = async (
     } catch (error) {
         console.error(error);
         return "createTransactionHex error"
-
     }
-
-
-
 }

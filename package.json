@@ -35,7 +35,6 @@
     "vite-tsconfig-paths": "3.5.0"
   },
   "dependencies": {
-    "@bitauth/libauth": "^1.19.1",
     "@samrock5000/cashscript": "^0.6.99",
     "@types/qrcode": "^1.5.0",
     "cashc": "0.6.5",
