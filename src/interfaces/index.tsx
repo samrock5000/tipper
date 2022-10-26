@@ -21,9 +21,9 @@ export interface Keys {
     addrScriptHash?:string;
     signerPrivateKey: string;
     signerPublicKeyHash: string;
-    signerPublicKey: string|Uint8Array;
+    signerPublicKey: string;
     receiverPrivateKey?: string|undefined;
-    receiverPublicKey?: string|Uint8Array|undefined;
+    receiverPublicKey?: string;
     receiverPublicKeyHash?: string|undefined;
     receiverWif?:string|undefined;
 }

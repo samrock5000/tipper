@@ -8,6 +8,7 @@
 
 :root {
   --qwik-dark-blue: #006ce9;
+  --qwik-ecash-blue: #1524657e;
   --qwik-light-blue: #18b6f6;
   --qwik-light-purple: #ac7ff4;
   --qwik-dark-purple: #713fc2;
@@ -104,7 +105,7 @@ footer a:hover {
 a.mindblow {
   margin: 0 auto;
   display: block;
-  background: var(--qwik-light-purple);
+  background: var(--qwik-ecash-blue);
   padding: 10px 20px;
   border-radius: 10px;
   border: 0;
@@ -122,4 +123,54 @@ a.mindblow:hover {
   border-bottom-width: 0px;
   margin-bottom: 4px;
   transform: translateY(4px);
+}
+
+.mind {
+  margin: 0 auto;
+  display: block;
+  background: var(--qwik-ecash-blue);
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 0;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  width: fit-content;
+  border-bottom: 4px solid black;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🔐</text></svg>")
+      16 0,
+    auto; /*!emojicursor.app*/
+}
+
+.mind.hover {
+  border-bottom-width: 0px;
+  margin-bottom: 4px;
+  transform: translateY(4px);
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: left;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

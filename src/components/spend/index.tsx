@@ -29,10 +29,10 @@ return (<>
         onResolved={(txid) => {
             return (
                 <div>
-
+                    <a href={`https://explorer.e.cash/tx/${txid}`} target="_blank">
                     <p>txid: {txid}</p>
-
-
+                    </a>
+                    
                 </div>
             );
         }}

@@ -1,30 +1,18 @@
 import {
     component$,
     useStore,
-    useWatch$,
     useStylesScoped$,
-    PropFunction,
-    useClientEffect$,
-    QRL,
-    $,
     Resource,
     useResource$,
-    useOn,
-    useServerMount$
+
 } from "@builder.io/qwik";
 import {
-    binToHex,
     hexToBin,
-    // generatePrivateKey,
     instantiateSecp256k1,
-    // instantiateRipemd160,
-    // instantiateSha256,
     Base58AddressFormatVersion,
     encodeCashAddress,
     CashAddressType,
-    // cashAddressToLockingBytecode,
-    // lockingBytecodeToAddressContents,
-    // encodePrivateKeyWif
+
 } from "@bitauth/libauth";
 import { DocumentHead, useLocation } from '@builder.io/qwik-city';
 import { Keys } from '../../../interfaces'
@@ -32,6 +20,7 @@ import { Contract, SignatureTemplate } from '@samrock5000/cashscript'
 import { getNewContract } from '../../../contracts'
 import { createWallet } from '../../../services'
 import { Spend } from '../../../components/spend'
+import scoped from './confetti.css?inline';
 export const log = console.log;
 
 export const hash160ToCash = (hex: string, network: number = 0x00) => {
@@ -48,16 +37,21 @@ export interface TxParams {
     recipient: string
 }
 
+
+
 export default component$(() => {
     const pubkeyhash = useLocation()
     const paramsArr = pubkeyhash.params.args.split(',')
-
+    useStylesScoped$(scoped)
     // store.pubkeyHash = paramsArr[0]
     // store.signature = paramsArr[1]
-    const store = useStore<TxParams>({ pubkeyHash: paramsArr[0], signature: paramsArr[1], recipient: '' })
-
+    const store = useStore<TxParams>({ pubkeyHash: paramsArr[0], signature: paramsArr[1], recipient: '' });
+ 
+ 
+    
     const txHexResource = useResource$(async () => {
 
+       
         const newContract = await getNewContract(store.pubkeyHash)
 
         const createTransactionHex = async (
@@ -65,7 +59,6 @@ export default component$(() => {
             store: TxParams,
             // amount?: number | BigInt
         ): Promise<string> => {
-
             const reciverWallet = await createWallet()
             const secp256k1 = await instantiateSecp256k1();
             const privKey = hexToBin(store.signature);
@@ -112,6 +105,7 @@ export default component$(() => {
 
     })
     return (<>
+      {confetti}
         {<Resource
             value={txHexResource}
             onPending={() => <>Loading...</>}
@@ -120,14 +114,32 @@ export default component$(() => {
                 return (
                     <div>
                         <span style="width:100px; word-wrap:break-word; display:inline;">
-                            <p> congrats baby</p>
+                            <p> thank 🫵🏼</p>
                         </span>
+                        <p>TransactionID </p>
                         <Spend rawTx={txHex} />
-                        <p>{ store.recipient }</p>
+                        <h6>New Wallet Keys <br></br> <i>wallet import format</i> :</h6>
+                        <p>{store.recipient}</p>
                     </div>
-                );
+
+                )
             }} />}
 
     </>)
 })
 
+export const head: DocumentHead = {
+    title: 'xec tip created',
+};
+
+export let confetti =   <div id="confettis">
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+</div>

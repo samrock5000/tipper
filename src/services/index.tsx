@@ -93,6 +93,7 @@ export const createWallet = async (): Promise<ContractArg> => {
 
     return res;
 };
+
 export const checkBalance = async (addr: string,) => {
 
     if (addr === undefined) {

@@ -4,6 +4,7 @@ import {
     useClientEffect$,
     Resource,
     useResource$,
+    useSignal,
 } from "@builder.io/qwik";
 // import { Link } from '@builder.io/qwik-city';
 import { getP2phkContract } from "../../contracts";
@@ -13,6 +14,7 @@ import { ChronikClient } from "chronik-client";
 export const log = console.log;
 
 export const CreateP2PKHContract = component$(() => {
+    const showWIF = useStore({ show: false })
     const txStatus = useStore<SpendProps>({ apicalls: 0, spent: false, satoshis: 0, rawHex: '', canSpend: false })
     const store = useStore<Keys>({
         addr: "",
@@ -25,6 +27,7 @@ export const CreateP2PKHContract = component$(() => {
         // receiverPublicKeyHash: "",
         // receiverWif: ''
     });
+
 
 
     //TODO usecleanup()
@@ -59,7 +62,7 @@ export const CreateP2PKHContract = component$(() => {
 
 
     useClientEffect$(async () => {
-
+        QRCode.toCanvas(document.getElementById("canvas"), store.addr);
         const getSats = async () => {
             const chronikClient = new ChronikClient("https://chronik.be.cash/xec")
             const scriptHashAssert: string = store.addrScriptHash!
@@ -95,10 +98,9 @@ export const CreateP2PKHContract = component$(() => {
             return satoshis
         }
 
-        QRCode.toCanvas(document.getElementById("canvas"), store.addr);
         // const wif = document.getElementById("wif");
         // wif.innerHTML = txStatus.spent ? store.receiverWif : 'wating';
-        const interval = setInterval(async () => (log("contract address balance:", txStatus.satoshis = await getSats())), 2000);
+        const interval = setInterval(async () => (log("contract address balance:", txStatus.satoshis = await getSats())), 800);
 
 
     });
@@ -120,12 +122,13 @@ export const CreateP2PKHContract = component$(() => {
         <>
             <div class="qrcode-container">
                 <h1>Send Tip Amount</h1>
-                <div class="qrcode" id="qrcode">
-                    <canvas
-              /*ref={useRef()}*/ id="canvas"
+                <div class="qrcode" id="qrcode" >
+                    <canvas datatype={store.addr}
+                        id="canvas"
                         width="150"
                         height="150"
                     ></canvas>
+
                 </div>
                 <p>Tip Amount: {txStatus.satoshis}</p>
 
@@ -141,15 +144,28 @@ export const CreateP2PKHContract = component$(() => {
                 onResolved={(store) => {
                     return (
                         <div>
+                            {/* <a class='mindblow' > Create Tip 🤯</a> */}
                             <p> {store.addr}</p>
-                            <div>
+                            <div  >
+         
+                                    <button class="mind" onClick$={() => showWIF.show = !showWIF.show} >show address keys</button>
+                             
+                                <ul style={{ display: showWIF.show ? "show" : "none" }} >
 
+                                    <li>addrScriptHash: {store.addrScriptHash}</li>
+                                    <li>signerPrivateKey: {store.signerPrivateKey}</li>
+                                    <li>signerPublicKeyHash: {store.signerPublicKeyHash}</li>
+                                    <li>signerPublicKey: {store.signerPublicKey}</li>
+                                </ul>
+                            </div>
+                            <div>
                                 {/* LINK TOOL BREAKS APP <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
-                              
-                                <div class='mindblow' style={{ display: (txStatus.canSpend) ? "block" : "none" }} >
-                                    <button>
-                                        <a href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> Create Tip 🤯</a>
-                                    </button>
+                                <div style={{ display: (txStatus.canSpend) ? "block" : "none" }} >
+                                    <a class='mindblow' href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}>
+
+                                        Create Tip 🤯
+
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -165,39 +181,3 @@ export const CreateP2PKHContract = component$(() => {
     );
 });
 
-/*
- const createHex = async () => {
-                // const satoshis = await checkBalance(value.contract.address)
-                // const spendable = satoshis > 10000
-                // txStatus.canSpend = spendable
-                // txStatus.satoshis = satoshis
-
-                // txStatus.apicalls = txStatus.apicalls + 1
-
-                const contract = await value.contract
-                // log("spendable", spendable)
-                // log("satoshis", satoshis)
-                // log("apicalls", txStatus.apicalls)
-                const txHex = await createTransactionHex(contract, store)
-                log("txHex ", txHex)
-                txStatus.rawHex = txHex
-                /*
-                if (spendable == false) {
-                    log("address not funded")
-                } else {
-                    const txHex = await createTransactionHex(contract, store)
-                    log("txHex ", txHex)
-                    txStatus.rawHex = txHex
-                    // sendRawTx(txHex)
-                    // txStatus.spent = true
-                    // clearTimeout(checkBal)
-                }
-               
-               
-            }
-            const canSpenTimer = setInterval(() => log("can spend ", txStatus.canSpend), 2000)
-            // log("can spend?", canSpend)
-            txStatus.canSpend ? createHex() : null
-            // cleanup(() => log("cleaned ", clearInterval(canSpend)));
-
-         */
