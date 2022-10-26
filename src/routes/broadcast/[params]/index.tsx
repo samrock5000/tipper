@@ -15,6 +15,7 @@ export default component$(() => {
     const paramArr = paramObject.split(',')
     store.hex = paramArr[0]
     store.wif = paramArr[1]
+    // store.wif = "paramArr[1]"
     console.log(store)
     return store
   })
@@ -33,15 +34,15 @@ export default component$(() => {
       onResolved={(res) => {
         return (
           <div>
-            <h1>{res.wif}</h1>
+            {/* <h1>{res.wif}</h1> */}
             {/* <Spend rawTx={res.hex} /> */}
+            <p>{store.hex}</p>
+      <p>{store.wif}</p>
           </div>
         );
       }}
     />
-
-
-
+     
   </>)
 
 })

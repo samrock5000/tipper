@@ -29,7 +29,7 @@ import {
 import { DocumentHead, useLocation } from '@builder.io/qwik-city';
 import { Keys } from '../../../interfaces'
 import { Contract, SignatureTemplate } from '@samrock5000/cashscript'
-import { getNewContract } from '../../../contract'
+import { getNewContract } from '../../../contracts'
 import { createWallet } from '../../../services'
 export const log = console.log;
 
@@ -108,9 +108,6 @@ export default component$(() => {
         // })()
 
     })
-
-
-
     return (<>
         {<Resource
             value={txHexResource}

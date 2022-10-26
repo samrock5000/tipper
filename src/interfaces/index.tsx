@@ -1,4 +1,4 @@
-import type { Contract } from '@samrock5000/cashscript'
+import  { Contract } from '@samrock5000/cashscript/dist/module/index.js'
 
 
 export interface ContractTypes {
@@ -9,23 +9,23 @@ export interface ContractTypes {
 }
 
 export interface ContractArg {
-    pubkey: Uint8Array;
+    pubkey: string;
     pubkeyhashHex: string;
-    privkey: Uint8Array;
+    privkey: string;
     privkeyHex: string;
     wif?:string
 }
 
 export interface Keys {
     addr: string;
-    addrScriptHash:string;
+    addrScriptHash?:string;
     signerPrivateKey: string;
     signerPublicKeyHash: string;
-    signerPublicKey: string;
-    receiverPrivateKey: string;
-    receiverPublicKey: string;
-    receiverPublicKeyHash: string;
-    receiverWif:string;
+    signerPublicKey: string|Uint8Array;
+    receiverPrivateKey: string|undefined;
+    receiverPublicKey: string|Uint8Array|undefined;
+    receiverPublicKeyHash: string|undefined;
+    receiverWif:string|undefined;
 }
 
 export interface SpendProps {

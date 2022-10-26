@@ -12,9 +12,10 @@ export const Spend = component$((props: { rawTx: string }) => {
         const tx = sendRawTx(store.txHex).then(val => {
             return val
         })
+        const res:string = await tx!
         log("tx", tx)
 
-        store.txid = tx
+        store.txid = res
       return store.txid
 
  

@@ -6,7 +6,7 @@ import {
     useResource$,
 } from "@builder.io/qwik";
 import { Link } from '@builder.io/qwik-city';
-import { getP2phkContract } from "../../contract";
+import { getP2phkContract } from "../../contracts";
 import QRCode from "qrcode";
 import type { Keys, SpendProps } from "../../interfaces";
 import { ChronikClient } from "chronik-client";
@@ -40,14 +40,17 @@ export const CreateP2PKHContract = component$(() => {
         const contractResult = await getP2phkContract().then((value) => {
             store.addr = value.contract.address;
             store.addrScriptHash = value.contractScriptHash;
-            store.signerPrivateKey = Buffer.from(value.signer.privkey).toString(
-                "hex"
-            );
+            // store.signerPrivateKey = Buffer.from(value.signer.privkey).toString(
+            //     "hex"
+            // );
+            store.signerPrivateKey = value.signer.privkey
             store.signerPublicKeyHash = value.signer.pubkeyhashHex;
-            store.signerPublicKey = Buffer.from(value.signer.pubkey).toString("hex");
-            store.receiverPrivateKey = value.receiver.privkeyHex;
-            store.receiverPublicKey = Buffer.from(value.receiver.pubkey).toString("hex");
-            store.receiverPublicKeyHash = value.receiver.pubkeyhashHex;
+            // store.signerPublicKey = Buffer.from(value.signer.pubkey).toString("hex");
+            store.signerPublicKey = value.signer.pubkey
+            store.receiverPrivateKey = value.receiver?.privkeyHex;
+            // store.receiverPublicKey = Buffer.from(value.receiver.pubkey).toString("hex");
+            store.receiverPublicKey = value.receiver?.pubkey
+            store.receiverPublicKeyHash = value.receiver?.pubkeyhashHex;
             store.receiverWif = value.receiver?.wif;
 
             log("store", store)
@@ -64,9 +67,10 @@ export const CreateP2PKHContract = component$(() => {
 
         const getSats = async () => {
             const chronikClient = new ChronikClient("https://chronik.be.cash/xec")
-            const chronikUtxoResult = await chronikClient.script('p2sh', store.addrScriptHash).utxos()
+            const scriptHashAssert: string = store.addrScriptHash!
+            const chronikUtxoResult = await chronikClient.script('p2sh', scriptHashAssert).utxos()
             // log(store.signerPublicKeyHash)
-            const getUtxos = async () => {
+            const getUtxos = async (): Promise<any[]> => {
                 if (chronikUtxoResult[0] === undefined) {
                     const utxos = [null].map((utxo) => ({
                         txid: null,
@@ -144,13 +148,16 @@ export const CreateP2PKHContract = component$(() => {
                         <div>
                             <p> {store.addr}</p>
                             <div>
-                                {/* <div style={{ display: (txStatus.canSpend) ? "block" : "none" }} > */}
-                                    {/* <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
-                                    <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}>
-                                        {/* <button> Create Tip 🤯</button> */}
-                                        SPEND 🤯
-                                    </Link>
-                                {/* </div> */}
+
+                                {/* <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
+                                {/* <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
+                                {/* <Link class="mindblow"  */}
+                                <div style={{ display: (txStatus.canSpend) ? "block" : "none" }} >
+                                    <a href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> Create Tip 🤯</a>
+
+                                    SPEND 🤯
+                                    {/* </Link> */}
+                                </div>
                             </div>
                         </div>
 

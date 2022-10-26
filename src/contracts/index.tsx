@@ -1,10 +1,11 @@
 // import { useWatch$, useStore } from '@builder.io/qwik';
-import {ChronikClient} from 'chronik-client'
-import {ChronikNetworkProvider,NetworkProvider,Argument,Contract} from '@samrock5000/cashscript'
-import {createWallet,chronik,chronikNet, addrToScriptHash} from '../services'
+import { ChronikClient } from 'chronik-client'
+import { ChronikNetworkProvider, NetworkProvider, Argument, Contract } from '@samrock5000/cashscript'
+import { createWallet, addrToScriptHash } from '../services'
 import { Artifact, Network } from '@samrock5000/cashscript';
+
 import { compileString } from 'cashc';
-import type {ContractTypes} from '../interfaces'
+import type { ContractTypes } from '../interfaces'
 export const log = console.log
 
 
@@ -53,21 +54,21 @@ export const escrowArtifact = (() => {
 
 
 export const getEscowContract = async (): Promise<ContractTypes> => {
-    // const chronik = new ChronikClient("https://chronik.be.cash/xec")
+    const chronik = new ChronikClient("https://chronik.be.cash/xec")
     const artifact = escrowArtifact();
 
     const signer = await createWallet();
     const receipient = await createWallet();
 
     const servProv = "901761961cdcb1642ada8e3dff0451957ef081dc";
-    const args: Argument = [servProv, signer.pubkeyhashHex, receipient.pubkeyhashHex];
+    const args: Argument[] = [servProv, signer.pubkeyhashHex, receipient.pubkeyhashHex];
     const provider: NetworkProvider = new ChronikNetworkProvider(
         "mainnet",
         chronik
     );
     // const provider: NetworkProvider = new ChronikNetworkProvider("mainnet",chronik)
 
-    const newContract = new Contract(artifact, args, chronikNet);
+    const newContract = new Contract(artifact, args, provider);
     // console.log("getContract ", newContract.address)
     const res: ContractTypes = {
         contract: newContract,
@@ -79,47 +80,47 @@ export const getEscowContract = async (): Promise<ContractTypes> => {
 };
 
 export const getP2phkContract = async (): Promise<ContractTypes> => {
-    // const chronik = new ChronikClient("https://chronik.be.cash/xec");
-    // const provider: NetworkProvider = new ChronikNetworkProvider(
-        // "mainnet",
-        // chronik
-    //   );
-    
-  
-    const artifact = p2pkhArtifact();
-    const signer = await createWallet();
-    const receipient = await createWallet()
-  
-    const args: Argument[] = [signer.pubkeyhashHex];
-    
-
-  
-    const newContract = new Contract(artifact, args, chronikNet);
-    // console.log("getContract ", newContract.address)
-    const contractScriptHash = await addrToScriptHash(newContract.address)
-    const res: ContractTypes = { contract: newContract, signer: signer, receiver:receipient,contractScriptHash:contractScriptHash };
-  
-    return res;
-  };
-
-   
-  export const getNewContract = async (pkh:string):Promise<Contract> => {
     const chronik = new ChronikClient("https://chronik.be.cash/xec");
     const provider: NetworkProvider = new ChronikNetworkProvider(
         "mainnet",
         chronik
-      );
+    );
+
 
     const artifact = p2pkhArtifact();
- 
-    const args: Argument[] = [pkh];
-    
-    const newContract = new Contract(artifact, args, chronikNet);
+    const signer = await createWallet();
+    const receipient = await createWallet()
+
+    const args: Argument[] = [signer.pubkeyhashHex];
+
+
+
+    const newContract = new Contract(artifact, args, provider);
     // console.log("getContract ", newContract.address)
-    const res: Contract =  newContract;
-  
+    const contractScriptHash: string = await addrToScriptHash(newContract.address)
+    const res: ContractTypes = { contract: newContract, signer: signer, receiver: receipient, contractScriptHash: contractScriptHash };
+
     return res;
-  }
+};
+
+
+export const getNewContract = async (pkh: string): Promise<Contract> => {
+    const chronik = new ChronikClient("https://chronik.be.cash/xec");
+    const provider: NetworkProvider = new ChronikNetworkProvider(
+        "mainnet",
+        chronik
+    );
+
+    const artifact = p2pkhArtifact();
+
+    const args: Argument[] = [pkh];
+
+    const newContract = new Contract(artifact, args, provider);
+    // console.log("getContract ", newContract.address)
+    const res: Contract = newContract;
+
+    return res;
+}
 
 
 

@@ -35,12 +35,13 @@ export const addrToScriptHash = async (address: string) => {
     return binToHex(addrContent.payload)
 }
 
-export const hash160ToCash = (hex: string, network: number = 0x00) => {
+export const hash160ToCash = (hex: string|undefined, network: number = 0x00) => {
     let type: string = Base58AddressFormatVersion[network] || "p2pkh";
     let prefix = "ecash";
     if (type.endsWith("Testnet")) prefix = "ectest";
     let cashType: CashAddressType = 0;
-    return encodeCashAddress(prefix, cashType, hexToBin(hex));
+    const hexStr:string = hex!
+    return encodeCashAddress(prefix, cashType, hexToBin(hexStr));
 };
 
 export const chronikBroadcastTx = $((rawTx: string) => {
@@ -48,7 +49,7 @@ export const chronikBroadcastTx = $((rawTx: string) => {
 })
 
 
-export const sendRawTx = async (rawTx: string): Promise<string | unknown | undefined> => {
+export const sendRawTx = async (rawTx: string): Promise<string> => {
     try {
         const txResults: string = await chronikNet.sendRawTransaction(rawTx)
         log("txResults ", txResults)
@@ -58,7 +59,7 @@ export const sendRawTx = async (rawTx: string): Promise<string | unknown | undef
 
         log("sendRawTx failed")
         console.error(error);
-        return error;
+        return "error in sendRawTx";
     }
 }
 
@@ -68,6 +69,9 @@ export const createWallet = async (): Promise<ContractArg> => {
     const ripemd160 = await instantiateRipemd160();
     const sha256 = await instantiateSha256();
 
+//     const secureRandom = generatePrivateKey( () =>
+//   window.crypto.getRandomValues(new Uint8Array(32))
+// );
     const secureRandom = generatePrivateKey(() => randomBytes(32));
     const privateKey = sha256.hash(secureRandom)
 
@@ -80,9 +84,9 @@ export const createWallet = async (): Promise<ContractArg> => {
     const pubKeyHashHex: string = binToHex(pubKeyHash);
     const wif = encodePrivateKeyWif(sha256, privateKey, 'mainnet')
     const res: ContractArg = {
-        pubkey: pubKey,
+        pubkey: binToHex(pubKey),
         pubkeyhashHex: pubKeyHashHex,
-        privkey: privateKey,
+        privkey: binToHex(privateKey),
         privkeyHex: privKeyHex,
         wif: wif,
     };
@@ -123,11 +127,14 @@ export const createTransactionHex = async (
 ): Promise<string> => {
 
     const secp256k1 = await instantiateSecp256k1();
-    const privKey = hexToBin(txInfo.signerPrivateKey);
+    const privKeyAssert:string = txInfo.signerPrivateKey!
+    const privKey = hexToBin(privKeyAssert);
 
     log("valid privateKey: ", secp256k1.validatePrivateKey(privKey));
-    const pubKey = hexToBin(txInfo.signerPublicKey)
-    const receipient = hash160ToCash(txInfo.receiverPublicKeyHash);
+    // const pubKey = hexToBin(txInfo.signerPublicKey)
+    const pubKey = txInfo.signerPublicKey
+    const receiverToString:string = txInfo.receiverPublicKeyHash!
+    const receipient = hash160ToCash(receiverToString);
     const serviceProviderAddr = "ecash:qr4jd3qejeym00u6u4lrzk3p6p3fmc545yjgvknzxr"
     const utxos = contract.getUtxos()
     const satoshis = await utxos.then((sats => sats.reduce((acc, utxo) => acc + utxo.satoshis, 0)))
