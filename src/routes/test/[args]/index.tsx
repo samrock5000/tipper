@@ -31,6 +31,7 @@ import { Keys } from '../../../interfaces'
 import { Contract, SignatureTemplate } from '@samrock5000/cashscript'
 import { getNewContract } from '../../../contracts'
 import { createWallet } from '../../../services'
+import { Spend } from '../../../components/spend'
 export const log = console.log;
 
 export const hash160ToCash = (hex: string, network: number = 0x00) => {
@@ -44,6 +45,7 @@ export const hash160ToCash = (hex: string, network: number = 0x00) => {
 export interface TxParams {
     pubkeyHash: string;
     signature: string;
+    recipient: string
 }
 
 export default component$(() => {
@@ -52,7 +54,7 @@ export default component$(() => {
 
     // store.pubkeyHash = paramsArr[0]
     // store.signature = paramsArr[1]
-    const store = useStore<TxParams>({ pubkeyHash: paramsArr[0], signature: paramsArr[1] })
+    const store = useStore<TxParams>({ pubkeyHash: paramsArr[0], signature: paramsArr[1], recipient: '' })
 
     const txHexResource = useResource$(async () => {
 
@@ -86,7 +88,8 @@ export default component$(() => {
             log("recipient", reciverWallet)
             // log("Contract Addr", contract.address)
             // log("receipient", receipient)
-
+            const wif: string = reciverWallet.wif!
+            store.recipient = wif
             try {
                 const tx = await contract.functions
                     .spend(pubKey, new SignatureTemplate(privKey))
@@ -117,13 +120,13 @@ export default component$(() => {
                 return (
                     <div>
                         <span style="width:100px; word-wrap:break-word; display:inline;">
-                            <p> {txHex}</p>
+                            <p> congrats baby</p>
                         </span>
-
+                        <Spend rawTx={txHex} />
+                        <p>{ store.recipient }</p>
                     </div>
                 );
             }} />}
-        <p>TEST</p>
 
     </>)
 })

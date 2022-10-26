@@ -89,7 +89,7 @@ export const getP2phkContract = async (): Promise<ContractTypes> => {
 
     const artifact = p2pkhArtifact();
     const signer = await createWallet();
-    const receipient = await createWallet()
+    // const receipient = await createWallet()
 
     const args: Argument[] = [signer.pubkeyhashHex];
 
@@ -98,7 +98,7 @@ export const getP2phkContract = async (): Promise<ContractTypes> => {
     const newContract = new Contract(artifact, args, provider);
     // console.log("getContract ", newContract.address)
     const contractScriptHash: string = await addrToScriptHash(newContract.address)
-    const res: ContractTypes = { contract: newContract, signer: signer, receiver: receipient, contractScriptHash: contractScriptHash };
+    const res: ContractTypes = { contract: newContract, signer: signer, /*receiver: receipient,*/ contractScriptHash: contractScriptHash };
 
     return res;
 };

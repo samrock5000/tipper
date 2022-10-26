@@ -5,19 +5,14 @@ import {
     Resource,
     useResource$,
 } from "@builder.io/qwik";
-import { Link } from '@builder.io/qwik-city';
+// import { Link } from '@builder.io/qwik-city';
 import { getP2phkContract } from "../../contracts";
 import QRCode from "qrcode";
 import type { Keys, SpendProps } from "../../interfaces";
 import { ChronikClient } from "chronik-client";
 export const log = console.log;
 
-// export const sendTx = $((rawTx: string) => {
-//     return sendRawTx(rawTx)
-// })
-
 export const CreateP2PKHContract = component$(() => {
-    const clearIntervalStatus = useStore({ cleared: false })
     const txStatus = useStore<SpendProps>({ apicalls: 0, spent: false, satoshis: 0, rawHex: '', canSpend: false })
     const store = useStore<Keys>({
         addr: "",
@@ -25,10 +20,10 @@ export const CreateP2PKHContract = component$(() => {
         signerPrivateKey: "",
         signerPublicKeyHash: "",
         signerPublicKey: "",
-        receiverPrivateKey: "",
-        receiverPublicKey: "",
-        receiverPublicKeyHash: "",
-        receiverWif: ''
+        // receiverPrivateKey: "",
+        // receiverPublicKey: "",
+        // receiverPublicKeyHash: "",
+        // receiverWif: ''
     });
 
 
@@ -47,11 +42,11 @@ export const CreateP2PKHContract = component$(() => {
             store.signerPublicKeyHash = value.signer.pubkeyhashHex;
             // store.signerPublicKey = Buffer.from(value.signer.pubkey).toString("hex");
             store.signerPublicKey = value.signer.pubkey
-            store.receiverPrivateKey = value.receiver?.privkeyHex;
+            // store.receiverPrivateKey = value.receiver?.privkeyHex;
             // store.receiverPublicKey = Buffer.from(value.receiver.pubkey).toString("hex");
-            store.receiverPublicKey = value.receiver?.pubkey
-            store.receiverPublicKeyHash = value.receiver?.pubkeyhashHex;
-            store.receiverWif = value.receiver?.wif;
+            // store.receiverPublicKey = value.receiver?.pubkey
+            // store.receiverPublicKeyHash = value.receiver?.pubkeyhashHex;
+            // store.receiverWif = value.receiver?.wif;
 
             log("store", store)
 
@@ -149,14 +144,12 @@ export const CreateP2PKHContract = component$(() => {
                             <p> {store.addr}</p>
                             <div>
 
-                                {/* <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
-                                {/* <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
-                                {/* <Link class="mindblow"  */}
-                                <div style={{ display: (txStatus.canSpend) ? "block" : "none" }} >
-                                    <a href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> Create Tip 🤯</a>
-
-                                    SPEND 🤯
-                                    {/* </Link> */}
+                                {/* LINK TOOL BREAKS APP <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
+                              
+                                <div class='mindblow' style={{ display: (txStatus.canSpend) ? "block" : "none" }} >
+                                    <button>
+                                        <a href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> Create Tip 🤯</a>
+                                    </button>
                                 </div>
                             </div>
                         </div>

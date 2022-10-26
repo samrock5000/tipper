@@ -22,10 +22,10 @@ export interface Keys {
     signerPrivateKey: string;
     signerPublicKeyHash: string;
     signerPublicKey: string|Uint8Array;
-    receiverPrivateKey: string|undefined;
-    receiverPublicKey: string|Uint8Array|undefined;
-    receiverPublicKeyHash: string|undefined;
-    receiverWif:string|undefined;
+    receiverPrivateKey?: string|undefined;
+    receiverPublicKey?: string|Uint8Array|undefined;
+    receiverPublicKeyHash?: string|undefined;
+    receiverWif?:string|undefined;
 }
 
 export interface SpendProps {
